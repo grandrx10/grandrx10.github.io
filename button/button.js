@@ -8,18 +8,22 @@ class Button {
         this.color = "WHITE"
     }
 
-    display(){
+    display(theme){
+        if (this.color != "GREY"){
+            this.color = theme.button_color
+        }
+
         fill (this.color)
-        rect (this.x, this.y, this.length, this.width)
-        fill ("BLACK")
+        rect (this.x, this.y, this.length, this.width, 20)
+        fill (theme.text_color)
         text (this.text, this.x, this.y)
     }
 
-    mouse_update(x, y, clicked, text_box, detect_text){
+    mouse_update(x, y, clicked, text_box, detect_text, theme){
         if (this.contains(x, y)){
             this.color = "GREY"
             if (clicked){
-                this.clicked(text_box, detect_text)
+                this.clicked(text_box, detect_text, theme)
             }
         } else {
             this.color = "WHITE"

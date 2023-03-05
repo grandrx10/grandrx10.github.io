@@ -8,13 +8,13 @@ class Text_Box{
         this.active = false
     }
 
-    display(){
+    display(theme){
         fill("WHITE")
-        rect(this.x, this.y, this.length + 10, this.width + 10)
-        fill("BLACK")
-        rect(this.x, this.y, this.length, this.width)
+        rect(this.x, this.y, this.length + 10, this.width + 10, 20)
+        fill(theme.button_color)
+        rect(this.x, this.y, this.length, this.width, 20)
 
-        fill("WHITE")
+        fill(theme.text_color)
         text(this.text, this.x, this.y)
     }
 

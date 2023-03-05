@@ -5,6 +5,8 @@ class Increment extends Button {
     }
 
     clicked(text_box, detect_text){
-        detect_text.time_delay += this.increment
+        if (detect_text.time_delay + this.increment > 0){
+            detect_text.time_delay += this.increment
+        }
     }
 }

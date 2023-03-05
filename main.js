@@ -2,6 +2,7 @@ let text_box;
 let detect_text;
 let classifier;
 let buttons = [];
+let theme = new Theme()
 
 let vid_size = {length: 650, width: 500}
 
@@ -29,7 +30,7 @@ let vid_size = {length: 650, width: 500}
     textAlign(CENTER)
     imageMode(CENTER)
     rectMode(CENTER)
-    text_box  = new Text_Box(windowWidth/2, windowHeight/2 + 220, 650, 150, "")
+    text_box  = new Text_Box(windowWidth/2, windowHeight/2 + 260, 650, 50, "")
     detect_text = new Detect_Text()
 
     flippedVideo = ml5.flipImage(video);
@@ -42,41 +43,62 @@ let vid_size = {length: 650, width: 500}
     buttons.push(new On_Off_Button(this.windowWidth/7, this.windowHeight/2 + 80, 200, 50))
 
     // right UI
-    buttons.push(new Increment(7*this.windowWidth/8, this.windowHeight/2 + 30, 100, 50, "+0.5", 0.5))
-    buttons.push(new Increment(7*this.windowWidth/8- 120, this.windowHeight/2 + 30, 100, 50, "-0.5", -0.5))
+    buttons.push(new Increment(7*this.windowWidth/8, this.windowHeight/2 + 120, 100, 50, "+0.5", 0.5))
+    buttons.push(new Increment(7*this.windowWidth/8- 120, this.windowHeight/2 + 120, 100, 50, "-0.5", -0.5))
+    
+    // Theme select
+    buttons.push(new Label(7*this.windowWidth/8 - 60, this.windowHeight/2 - 60, 200, 60))
+    buttons.push(new Label(7*this.windowWidth/8 - 60, this.windowHeight/2 - 110, 200, 30, "Theme Select"))
+    buttons.push(new Theme_Select(7*this.windowWidth/8 - 60, this.windowHeight/2 - 60, 50, "Noir", "rgb(1, 1, 1)", "rgb(101, 101, 101)", "white", "Black"))
+    buttons.push(new Theme_Select(7*this.windowWidth/8, this.windowHeight/2 - 60, 50, "Violet", "rgb(92, 0, 173)", "rgb(188, 143, 227)", 
+    "rgb(204, 169, 235)", "BLACK"))
+    buttons.push(new Theme_Select(7*this.windowWidth/8 - 120, this.windowHeight/2 - 60, 50, "Cyan", "rgb(7, 84, 120)", "rgb(143, 200, 227)", 
+    "rgb(128, 189, 217)", "BLACK"))
+
+    buttons.push(new Title_Label(this.windowWidth/2, 50, 200, 50, "Signify"))
   }
 
   function mousePressed(){
     for (var i in buttons){
-      buttons[i].mouse_update(mouseX, mouseY, true, text_box, detect_text)
+      buttons[i].mouse_update(mouseX, mouseY, true, text_box, detect_text, theme)
     }
   }
 
   function draw() {
-    background(51);
+    background(50)
+    // linearGradient(
+    //   0, 0, windowWidth, windowHeight,
+    //   theme.background_color_1, theme.background_color_2
+    // )
+    radialGradient(
+      windowWidth/2, windowHeight/2, 0,
+      windowWidth/2, windowHeight/2, windowWidth/2,
+      theme.background_color_2, theme.background_color_1
+    )
+    rect(windowWidth/2, windowHeight/2, windowWidth, windowHeight)
     // Draw the video
 
     // Draw the label
     fill(255);
-    rect(windowWidth/2, windowHeight/2 - 100, vid_size.length + 10, vid_size.width + 10)
-    image(flippedVideo, windowWidth/2, windowHeight/2 - 100);
+    rect(windowWidth/2, windowHeight/2 - 40, vid_size.length + 30, vid_size.width + 30, 20)
+    image(flippedVideo, windowWidth/2, windowHeight/2 - 40);
     
     textSize(16);
     textAlign(CENTER, CENTER);
     detect_text.update_text(label)
     text_box.update_text(detect_text)
 
-    text_box.display()
+    text_box.display(theme)
 
     for (var i in buttons){
       buttons[i].mouse_update(mouseX, mouseY, false, text_box, detect_text)
-      buttons[i].display()
+      buttons[i].display(theme)
     }
 
-    fill ("WHITE")
-    rect (7*this.windowWidth/8 - 60, this.windowHeight/2 - 30, 220, 50)
-    fill ("BLACK")
-    text ("Sign Hold Duration: " + detect_text.time_delay, 7*this.windowWidth/8 - 60, this.windowHeight/2 - 30)
+    fill (theme.button_color)
+    rect (7*this.windowWidth/8 - 60, this.windowHeight/2 + 60, 220, 50, 20)
+    fill (theme.text_color)
+    text ("Sign Hold Duration: " + detect_text.time_delay + " sec", 7*this.windowWidth/8 - 60, this.windowHeight/2 + 60)
   }
 
   // Get a prediction for the current video frame
@@ -99,4 +121,24 @@ let vid_size = {length: 650, width: 500}
     label = results[0].label;
     // Classifiy again!
     classifyVideo();
+  }
+
+function linearGradient(sX, sY, eX, eY, colorS, colorE){
+    let gradient = drawingContext.createLinearGradient(
+      sX, sY, eX, eY
+    );
+    gradient.addColorStop(0, colorS);
+    gradient.addColorStop(1, colorE);
+    drawingContext.fillStyle = gradient;
+    // drawingContext.strokeStyle = gradient;
+  }
+
+  function radialGradient(sX, sY, sR, eX, eY, eR, colorS, colorE){
+    let gradient = drawingContext.createRadialGradient(
+      sX, sY, sR, eX, eY, eR
+    );
+    gradient.addColorStop(0, colorS);
+    gradient.addColorStop(1, colorE);
+  
+    drawingContext.fillStyle = gradient;
   }
