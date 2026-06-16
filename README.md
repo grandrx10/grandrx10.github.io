@@ -1,4 +1,5 @@
 # Signify
+<img width="1872" height="884" alt="image" src="https://github.com/user-attachments/assets/bc4cdf3c-6a1a-44be-9c1e-8b9f24f7bab9" />
 
 A browser-based **American Sign Language (ASL) recognition app**. Signify uses your webcam to read hand signs in real time, spells them out into a text box, and can read the result aloud with text-to-speech.
 
